@@ -1,28 +1,75 @@
-import java.util.*;
-
 public class PalindromeCheckerApp {
-    public static void main(String[] args) {
-        String input = "radar";
-        Deque<Character> deque = new ArrayDeque<>();
 
-        for (int i = 0; i < input.length(); i++) {
-            deque.addLast(input.charAt(i));
+    static class Node {
+        char data;
+        Node next;
+
+        Node(char data) {
+            this.data = data;
+            this.next = null;
         }
+    }
+        public static void main(String[] args) {
+            String input = "madam";
 
-        boolean isPalindrome = true;
+            Node head = null;
+            Node tail = null;
 
-        while (deque.size() > 1) {
-            if (deque.removeFirst() != deque.removeLast()) {
-                isPalindrome = false;
-                break;
+            for (int i = 0; i < input.length(); i++) {
+                Node newNode = new Node(input.charAt(i));
+                if (head == null) {
+                    head = newNode;
+                    tail = newNode;
+                } else {
+                    tail.next = newNode;
+                    tail = newNode;
+                }
+            }
+
+            if (isPalindrome(head)) {
+                System.out.println(input + " is a Palindrome.");
+            } else {
+                System.out.println(input + " is NOT a Palindrome.");
             }
         }
 
-        if (isPalindrome) {
-            System.out.println(input + " is a Palindrome.");
-        } else {
-            System.out.println(input + " is NOT a Palindrome.");
+        public static boolean isPalindrome(Node head) {
+
+            if (head == null || head.next == null) {
+                return true;
+            }
+
+            Node slow = head;
+            Node fast = head;
+
+            while (fast != null && fast.next != null) {
+                slow = slow.next;
+                fast = fast.next.next;
+            }
+
+            Node prev = null;
+            Node current = slow;
+            Node nextNode = null;
+
+            while (current != null) {
+                nextNode = current.next;
+                current.next = prev;
+                prev = current;
+                current = nextNode;
+            }
+
+            Node firstHalf = head;
+            Node secondHalf = prev;
+
+            while (secondHalf != null) {
+                if (firstHalf.data != secondHalf.data) {
+                    return false;
+                }
+                firstHalf = firstHalf.next;
+                secondHalf = secondHalf.next;
+            }
+
+            return true;
         }
     }
-}
 
